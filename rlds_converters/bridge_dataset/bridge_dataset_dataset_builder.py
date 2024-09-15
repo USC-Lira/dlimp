@@ -13,7 +13,7 @@ from PIL import Image
 # we ignore the small amount of data that contains >4 views
 N_VIEWS = 4
 IMAGE_SIZE = (480, 640)
-DEPTH = 5
+DEPTH = 1
 TRAIN_PROPORTION = 0.9
 
 ORIG_NAMES = [f"images{i}" for i in range(N_VIEWS)]
