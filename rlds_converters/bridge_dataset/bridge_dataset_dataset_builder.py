@@ -13,7 +13,7 @@ from PIL import Image
 # we ignore the small amount of data that contains >4 views
 N_VIEWS = 4
 IMAGE_SIZE = (480, 640)
-DEPTH = 1
+DEPTH = 0
 TRAIN_PROPORTION = 0.9
 
 ORIG_NAMES = [f"images{i}" for i in range(N_VIEWS)]
@@ -216,7 +216,7 @@ class BridgeDataset(MultiThreadedDatasetBuilder):
         out = dict()
 
         out["images"] = process_images(path)
-        out["depth"] = process_depth(path)
+        out["depth"] = process_depth(path) if DEPTH != 0 else None
         out["state"] = process_state(path)
         out["actions"] = process_actions(path)
         out["lang"] = process_lang(path)
@@ -300,7 +300,7 @@ class BridgeDataset(MultiThreadedDatasetBuilder):
                 observation[new_key] = out["images"][orig_key][i]
             for missing in missing_keys:
                 observation[missing] = np.zeros(IMAGE_SIZE + (3,), dtype=np.uint8)
-            if episode_metadata["has_depth_0"]:
+            if episode_metadata["has_depth_0"] and DEPTH != 0:
                 observation["depth_0"] = out["depth"][i]
             else:
                 observation["depth_0"] = np.zeros(IMAGE_SIZE + (1,), dtype=np.uint16)
